@@ -13,7 +13,9 @@ void diff_eq(double C[N][N], double C_new[N][N]){
     #pragma omp for
         for (int i = 1; i < N - 1; i++){
             for (int j = 1; j < N - 1; j++){
-                C_new[i][j] = C[i][j] + D * DELTA_T / (DELTA_X * DELTA_X) * (C[i + 1][j] + C[i - 1][j] + C[i][j + 1] + C[i][j - 1] - 4 * C[i][j]);
+                C_new[i][j] = C[i][j] + D * DELTA_T * (
+                    (C[i+1][j] + C[i-1][j] + C[i][j+1] + C[i][j-1] - 4 * C[i][j]) / (DELTA_X * DELTA_X)
+                );           
             }
 
         }
