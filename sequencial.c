@@ -1,31 +1,34 @@
-#include <stdio.h>
+# include <stdio.h>
 
-#define N 100 // Tamanho da grade
-#define T 1000 // Número de iterações
-#define D 0.1 // Coeficiente de difusão
-#define DELTA_T 0.01 // Passo de tempo
-#define DELTA_X 1.0 // Passo de espaço
+# define N 100  // Tamanho da grade
+# define T 1000 // Número de iterações
+# define D 0.1  // Coeficiente de difusão
+# define DELTA_T 0.01
+# define DELTA_X 1.0
 
-void diff_eq(double C[N][N], double C_new[N][N]){
-    for (int t = 0; t < T; t++){
-        for (int i = 1; i < N - 1; i++){
-            for (int j = 1; j < N - 1; j++){
-                C_new[i][j] = C[i][j] + D * DELTA_T / (DELTA_X * DELTA_X) * (C[i + 1][j] + C[i - 1][j] + C[i][j + 1] + C[i][j - 1] - 4 * C[i][j]);
+void diff_eq(double C[N][N], double C_new[N][N]) {
+    for (int t = 0; t < T; t++) {
+        for (int i = 1; i < N - 1; i++) {
+            for (int j = 1; j < N - 1; j++) {
+                C_new[i][j] = C[i][j] + D * DELTA_T * (
+                    (C[i+1][j] + C[i-1][j] + C[i][j+1] + C[i][j-1] - 4 * C[i][j]) / (DELTA_X * DELTA_X)
+                );
             }
         }
-        // Atualizar a matriz C para a próxima iteração
-        for (int i = 1; i < N - 1; i++){
-            for (int j = 1; j < N - 1; j++)
+        // Atualizar matriz para a próxima iteração
+        for (int i = 1; i < N - 1; i++) {
+            for (int j = 1; j < N - 1; j++) {
                 C[i][j] = C_new[i][j];
+            }
         }
     }
 }
 
-int main(int argc, char **argv){
-    double C[N][N] = {0}; // Concentração Inicial
-    double C_new[N][N] = {0}; // Concentração para a próxima iteração
+int main() {
+    double C[N][N] = {0};      // Concentração inicial
+    double C_new[N][N] = {0};  // Concentração para a próxima iteração
 
-    // Inicializar uma concentraçãoalta no centro
+    // Inicializar uma concentração alta no centro
     C[N/2][N/2] = 1.0;
 
     // Executar a equação de difusão
@@ -33,4 +36,5 @@ int main(int argc, char **argv){
 
     // Exibir resultado para verificação
     printf("Concentração final no centro: %f\n", C[N/2][N/2]);
+    return 0;
 }
