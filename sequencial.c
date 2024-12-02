@@ -3,12 +3,12 @@
 #include <math.h>
 
 #define N 2000 // Tamanho da grade
-#define T 500 // Número de iterações no tempo
+#define T 1000 // Número de iterações no tempo
 #define D 0.1 // Coeficiente de difusão
 #define DELTA_T 0.01
 #define DELTA_X 1.0
 
-void diff_eq(double **C, double **C_new) { //diff_eq(double C[N][N], double C_new[N][N]) {
+void diff_eq(double **C, double **C_new) {
     for (int t = 0; t < T; t++) {
         for (int i = 1; i < N - 1; i++) {
             for (int j = 1; j < N - 1; j++) {
