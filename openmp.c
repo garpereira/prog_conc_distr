@@ -9,7 +9,7 @@
 #define DELTA_T 0.01
 #define DELTA_X 1.0
 
-#define MAX_THREADS 2
+#define MAX_THREADS 16
 
 void diff_eq(double **C, double **C_new) {
       
