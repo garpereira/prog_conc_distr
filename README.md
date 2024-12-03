@@ -68,8 +68,8 @@ Onde:
    Caso queira alterar a quantidade de threads, é necessário modificar a linha no código:
    ```bash
    #define MAX_THREADS <Número de Threads>
-
-  Substitua <Número de Threads> pelo valor desejado para o número de threads a ser utilizado na execução.
+   ```
+   Substitua <Número de Threads> pelo valor desejado para o número de threads a ser utilizado na execução.
 
 ### Etapa 4: Implementação com CUDA (Simulação em GPU)
 
