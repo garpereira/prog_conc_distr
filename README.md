@@ -49,6 +49,28 @@ Onde:
 - Implementar o modelo de difusão em uma CPU usando OpenMP para paralelizar o cálculo da concentração em cada célula da grade.
 - Utilizar técnicas de sincronização e divisão de trabalho para garantir que múltiplas threads possam calcular a concentração de forma eficiente e sem condições de corrida.
 
+#### Como rodar o código
+
+1. **Compilar o código:**
+
+   Para compilar o código com OpenMP, utilize o seguinte comando:
+   ```bash
+   gcc -fopenmp openmp.c -o openmp.o
+
+2. **Executar o código:**
+
+   Para executar o código compilado, utilize o comando:
+   ```bash
+   ./openmp.o
+   
+3. **Alterar o número de threads:**
+   
+   Caso queira alterar a quantidade de threads, é necessário modificar a linha no código:
+   ```bash
+   #define MAX_THREADS <Número de Threads>
+
+  Substitua <Número de Threads> pelo valor desejado para o número de threads a ser utilizado na execução.
+
 ### Etapa 4: Implementação com CUDA (Simulação em GPU)
 
 - Implementar o modelo de difusão em uma GPU usando CUDA para acelerar o cálculo da concentração em cada célula da grade.
