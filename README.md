@@ -55,6 +55,7 @@ Onde:
 
    Para compilar o código com OpenMP, utilize o seguinte comando:
    ```bash
+   cd openmp
    gcc -fopenmp openmp.c -o openmp.o
 
 2. **Executar o código:**
