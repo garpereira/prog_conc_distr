@@ -4,7 +4,7 @@
 #include <cuda_runtime.h>
 
 
-#define N 2000 // Tamanho da Grade
+#define N 16000 // Tamanho da Grade
 #define T 1000 // Numero de Iterações
 #define D 0.1 // Coeficiente de Difusão
 #define DELTA_T 0.01 // Passo de Tempo
