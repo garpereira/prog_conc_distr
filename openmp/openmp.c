@@ -3,7 +3,7 @@
 #include <math.h>
 #include <omp.h>
 
-#define N 2000 // Tamanho da grade
+#define N 16000 // Tamanho da grade
 #define T 1000 // Número de iterações no tempo
 #define D 0.1 // Coeficiente de difusão
 #define DELTA_T 0.01
