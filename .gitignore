@@ -1,2 +1,8 @@
 *.o
 *.out
+*.py
+
+output
+venv
+*.txt
+.vscode
