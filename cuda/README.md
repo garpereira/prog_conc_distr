@@ -68,6 +68,4 @@ nvcc cuda.cu -o cuda
 ./cuda
 ```
 
-Os resultados obtidos foram equivalentes a versão sequencial, o que indica que a implementação paralela está correta. A aceleração obtida com a GPU foi significativa, como podemos observar no gráfico abaixo:
-
-![Gráfico de Aceleração](aceleracaoGPU.png)
+Os resultados obtidos foram equivalentes a versão sequencial, o que indica que a implementação paralela está correta. O tempo de execução foi significativamente reduzido em comparação com a versão sequencial, demonstrando a eficácia da utilização da GPU para acelerar o cálculo da equação de difusão.
