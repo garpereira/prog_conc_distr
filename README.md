@@ -1,10 +1,10 @@
+# Simulação de Difusão de Contaminantes com Computação Paralela e Distribuída
+
 ## Descrição do Projeto
 
 Este projeto faz parte da disciplina de Programação Concorrente e Distribuída e tem como objetivo desenvolver uma aplicação que demonstre conceitos de concorrência e distribuição. A aplicação será dividida em várias partes, cada uma focando em diferentes aspectos da programação concorrente e distribuída, como sincronização de threads, comunicação entre processos e escalabilidade em sistemas distribuídos.
 
-
-
-### Desafios Abordados:
+## Desafios Abordados:
 1. **Sincronização de Threads**: Garantir que múltiplas threads possam acessar recursos compartilhados sem causar condições de corrida ou inconsistências nos dados.
 2. **Comunicação entre Processos**: Facilitar a troca de informações entre processos que podem estar executando em diferentes máquinas ou núcleos de processamento.
 3. **Escalabilidade**: Desenvolver soluções que possam crescer em capacidade e desempenho à medida que mais recursos computacionais são adicionados.
@@ -41,51 +41,101 @@ Onde:
 
 ### Etapa 2: Configuração do Ambiente e Parametrização
 
-- Configurar o ambiente, uma grade 2D onde cada célula representa a concentração de contaminantes em uma região do corpo d'água
-- Definir os parâmetros do modelo de difusão, como o tamanho do domínio, o número de pontos de grade, o tempo de simulação, coeficiente de difusão, condições de contorno(por exemplo, bordas onde o contaminante não se espalha) e as condições iniciais (como uma área de alta concentraçãod e contaminante).
+- Configurar o ambiente com uma grade 2D onde cada célula representa a concentração de contaminantes em uma região do corpo d'água.
+- Definir os parâmetros do modelo de difusão, como:
+   - **Tamanho do domínio:** `N x N`
+   - **Número de pontos de grade:** `#define N 2000`
+   - **Número de iterações:** `#define T 1000`
+   - **Coeficiente de difusão:** `#define D 0.1`
+   - **Passos de tempo e espaço:** `#define DELTA_T 0.01`, `#define DELTA_X 1.0`
+   - **Condições de contorno:** Bordas onde o contaminante não se espalha.
+   - **Condições iniciais:** Área central com alta concentração de contaminantes.
 
 ### Etapa 3: Implementação com OpenMP (Simulação Local em CPU)
 
-- Implementar o modelo de difusão em uma CPU usando OpenMP para paralelizar o cálculo da concentração em cada célula da grade.
-- Utilizar técnicas de sincronização e divisão de trabalho para garantir que múltiplas threads possam calcular a concentração de forma eficiente e sem condições de corrida.
+A implementação com OpenMP paraleliza os loops da simulação utilizando múltiplos núcleos da CPU. As diretivas utilizadas incluem:
+
+- **`#pragma omp parallel for`**: Para dividir os cálculos entre múltiplos threads.
+- **`#pragma omp reduction`**: Para somar os valores de erro médio entre threads de forma segura.
+- **`#pragma omp collapse(2)`**: Para paralelizar duplos loops aninhados.
 
 #### Como rodar o código
 
-1. **Compilar o código:**
-
-   Para compilar o código com OpenMP, utilize o seguinte comando:
-   ```bash
-   cd openmp
-   gcc -fopenmp openmp.c -o openmp.o
-
+1. **Compilar o código com OpenMP:**
+    ```bash
+    cd openmp
+    gcc -fopenmp openmp.c -o openmp.o
+    ```
 2. **Executar o código:**
-
-   Para executar o código compilado, utilize o comando:
-   ```bash
-   ./openmp.o
-   
-3. **Alterar o número de threads:**
-   
-   Caso queira alterar a quantidade de threads, é necessário modificar a linha no código:
-   ```bash
-   #define MAX_THREADS <Número de Threads>
-   ```
-   Substitua <Número de Threads> pelo valor desejado para o número de threads a ser utilizado na execução.
+    ```bash
+    ./openmp.o
+    ```
+3. **Alterar o número de threads: Modifique a linha no código:**
+    ```c
+    #define MAX_THREADS <Número de Threads>
+    ```
 
 ### Etapa 4: Implementação com CUDA (Simulação em GPU)
 
-- Implementar o modelo de difusão em uma GPU usando CUDA para acelerar o cálculo da concentração em cada célula da grade.
-- Utilizar blocos e threads CUDA para distribuir o trabalho entre os núcleos de GPU, aproveitando a paralelização em massa oferecida por esses dispositivos.
+A versão CUDA paraleliza os cálculos distribuindo-os entre milhares de núcleos da GPU. A implementação utiliza:
+
+- **Memória compartilhada (`__shared__`)**: Para otimizar acessos e reduzir latência.
+- **Kernel CUDA**: Para distribuir os cálculos entre blocos e threads.
+- **`atomicAdd`**: Para garantir a soma segura das diferenças no cálculo do erro médio.
+
+#### Como rodar o código
+
+1. **Compilar o código com CUDA:**
+    ```bash
+    cd cuda
+    nvcc cuda.cu -o cuda.o
+    ```
+2. **Executar o código:**
+    ```bash
+    ./cuda.o
+    ```
+3. **Alterar o número de threads e blocos: Modifique as linhas no código:**
+    ```c
+    #define THREADS_PER_BLOCK <Número de Threads por Bloco>
+    #define BLOCKS <Número de Blocos>
+    ```
+
+Essa implementação permite que a simulação aproveite o poder de processamento paralelo das GPUs, acelerando significativamente o tempo de execução.
 
 ### Etapa 5: Implementação com MPI (Simulação Distribuída)
 
-- Implementar o modelo de difusão em um cluster de computadores usando MPI para distribuir o cálculo da concentração em diferentes processos, podendo ser desenvolvido um código híbridro(incluindo trechso em OpenMP e CUDA).
-- Utilizar comunicação ponto a ponto e coletiva para trocar informações entre os processos, permitindo que cada nó do cluster calcule uma parte da grade e compartilhe os resultados com os outros nós.
+A versão MPI divide a matriz entre múltiplos processos, utilizando:
 
+- **MPI_Sendrecv**: Para troca de informações entre processos vizinhos.
+- **MPI_Reduce**: Para somar os erros médios de cada processo.
+- **MPI_Gather**: Para coletar os resultados no processo mestre.
+
+#### Como rodar o código
+
+1. **Compilar o código com MPI:**
+    ```bash
+    cd mpi
+    mpicc mpi.c -o mpi.o
+    ```
+2. **Executar o código:**
+    ```bash
+    mpirun -np <Número de Processos> ./mpi.o
+    ```
+
+Essa implementação permite que a simulação seja distribuída entre múltiplos nós de um cluster, aproveitando a capacidade de processamento paralelo de sistemas distribuídos.
 
 ## Avaliação de Desempenho e Resultados
 
+Os testes de desempenho foram realizados comparando OpenMP, CUDA e MPI.
 
+| Tamanho da Grade | OpenMP (s) | CUDA (s) | MPI (s, P=4) |
+|------------------|------------|----------|--------------|
+| 2000 x 2000      | 11.7326    | 4.7988   | 20.644       |
+| 4000 x 4000      | 43.5072    | 13.7806  | 41.979       |
+| 8000 x 8000      | 129.8362   | 46.951   | 139.416      |
 
-### Contribuição:
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+Os resultados mostram que:
+
+- CUDA foi a abordagem mais rápida para grades grandes.
+- MPI teve desempenho variável dependendo do número de processos.
+- OpenMP teve melhor eficiência para grades menores.
